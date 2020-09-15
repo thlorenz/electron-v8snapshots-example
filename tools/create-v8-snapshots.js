@@ -6,7 +6,7 @@ const electronLink = require('electron-link')
 
 const excludedModules = {}
 
-async function main () {
+async function main() {
   const baseDirPath = path.resolve(__dirname, '..')
 
   console.log('Creating a linked script..')
@@ -14,14 +14,18 @@ async function main () {
     baseDirPath: baseDirPath,
     mainPath: `${baseDirPath}/snapshot.js`,
     cachePath: `${baseDirPath}/cache`,
-    shouldExcludeModule: (modulePath) => excludedModules.hasOwnProperty(modulePath)
+    shouldExcludeModule: (modulePath) =>
+      excludedModules.hasOwnProperty(modulePath),
   })
 
   const snapshotScriptPath = `${baseDirPath}/cache/snapshot.js`
   fs.writeFileSync(snapshotScriptPath, result.snapshotScript)
 
   // Verify if we will be able to use this in `mksnapshot`
-  vm.runInNewContext(result.snapshotScript, undefined, {filename: snapshotScriptPath, displayErrors: true})
+  vm.runInNewContext(result.snapshotScript, undefined, {
+    filename: snapshotScriptPath,
+    displayErrors: true,
+  })
 
   const outputBlobPath = baseDirPath
   console.log(`Generating startup blob in "${outputBlobPath}"`)
@@ -37,4 +41,4 @@ async function main () {
   )
 }
 
-main().catch(err => console.error(err))
+main().catch((err) => console.error(err))
